@@ -33,7 +33,7 @@ class ea:
         if tpc[0] < bpc[0] and tpc[1] < bpc[1] and tpc[2] < bpc[2]:
             return True
         return False
-    def pareto_rank(self, targetpose):
+    def pareto_count(self, targetpose):
         poses = selection.select(self)
         rank = 0
         for pose in poses:
@@ -59,4 +59,4 @@ class ea:
             tposes.append(tempPose)
         poses.sort(key=lambda x: self.score(x))
         tposes.sort(key=lambda x: self.score(x))
-        self.population = poses[:50] + tposes[:50]
+        self.population = poses[:50] + tposes[:50] #half of the population - needs updating
