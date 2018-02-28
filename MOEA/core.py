@@ -50,6 +50,7 @@ class ea:
             self.evalnum = 0
     def iterate(self):
         poses = selection.select(self)
+        popsize = len(poses)
         tposes = []
         for pose in poses:
             tempPose = Pose()
@@ -57,6 +58,8 @@ class ea:
             variation.perturb(self, tempPose)
             improvement.run(self, tempPose)
             tposes.append(tempPose)
-        poses.sort(key=lambda x: self.score(x))
-        tposes.sort(key=lambda x: self.score(x))
-        self.population = poses[:50] + tposes[:50] #half of the population - needs updating
+        #poses.sort(key=lambda x: self.score(x))
+        #tposesc.sort(key=lambda x: self.score(x))
+        merged_population = poses+tposes
+        merged_population.sort(key=lambda x: self.score(x))
+        self.population = poses[:(popsize/2)] + tposes[:(popsize/2)]
