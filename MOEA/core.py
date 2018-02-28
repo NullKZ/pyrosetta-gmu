@@ -17,12 +17,27 @@ class ea:
         diff = tempScore - self.score(oldPose)
         self.evalnum += 2
         r = random()
-        mc = exp(diff/-28.8539008178)
+        mc = exp(diff/-20)
         if diff < 0 or r<mc:
             oldPose.assign(newPose)
         if (tempScore < self.minScore):
             self.minScore = tempScore
             self.minState.assign(newPose)
+    def pareto_calc(self, pose):
+        #returns tuple (short range hbond, long range hbond, and sum of the other terms of score4_smooth)
+        return (self.hbond_sr(pose),self.hbond_lr(pose),self.other(pose))
+    def pareto_domination(self, test_pose, base_pose)
+        #returns true if the test pose dominates the base pose
+        tpc = self.pareto_calc(test_pose)
+        bpc = self.pareto_calc(base_pose)
+        if tpc[0] < bpc[0] and tpc[1] < bpc[1] and tpc[2] < bpc[2]:
+            return True
+        return False
+    def pareto_rank(self, targetpose):
+        poses = selection.select(self)
+        rank = 0
+        for pose in poses:
+            if self.pareto_domination(targetpose, pose)
     def run(self):
         self.evalnum=0
         stagecfg = self.cfg['stages']
@@ -44,4 +59,4 @@ class ea:
             tposes.append(tempPose)
         poses.sort(key=lambda x: self.score(x))
         tposes.sort(key=lambda x: self.score(x))
-        self.population = poses[:10] + tposes[:10]
+        self.population = poses[:50] + tposes[:50]
