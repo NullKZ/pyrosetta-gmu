@@ -62,4 +62,4 @@ class ea:
         #tposesc.sort(key=lambda x: self.score(x))
         merged_population = poses+tposes
         merged_population.sort(key=lambda x: self.score(x))
-        self.population = poses[:(popsize/2)] + tposes[:(popsize/2)]
+        self.population = merged_population[:(popsize/2)]
