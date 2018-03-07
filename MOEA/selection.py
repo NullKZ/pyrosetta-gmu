@@ -6,3 +6,5 @@ def select(eaObj):
         return selection.oneplusone(eaObj)
     if selectionType == 'moea':
         return selection.moea(eaObj)
+def truncate(eaObj, poses, tposes):
+    return selection.truncate(eaObj,poses,tposes)

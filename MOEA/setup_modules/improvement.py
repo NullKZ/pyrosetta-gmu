@@ -10,14 +10,14 @@ def improvement(eaObj, impcfg):
         eaObj.relax = protocols.relax.ClassicRelax()
     elif eaObj.relaxtype == 'centroid':
         eaObj.relax = protocols.relax.CentroidRelax()
-    elif eaObj.relaxtype == 'plow':
+    elif eaObj.relaxtype == 'local':
         pass
     else:
         raise Exception("Unrecognized relaxtype!")
         return
     eaObj.dE = float(impcfg['dE'])
     eaObj.impScoreFxn = create_score_function(impcfg['scorefxn'])
-    if not eaObj.relaxtype == 'plow':
+    if not eaObj.relaxtype == 'local':
         eaObj.relax.set_scorefxn(eaObj.impScoreFxn)
     eaObj.impFragLength = int(impcfg['fragLength'])
     eaObj.impFragments = core.fragment.ConstantLengthFragSet(eaObj.impFragLength)

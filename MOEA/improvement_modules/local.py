@@ -1,7 +1,7 @@
 from pyrosetta import *
 from rosetta import *
 
-def pyplow(eaObj, pose):
+def local(eaObj, pose):
     curScore = eaObj.impScoreFxn(pose)
     eaObj.evalnum+=1
     discardnum = 0
