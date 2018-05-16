@@ -32,7 +32,8 @@ def population(eaObj, initcfg):
 def mc(eaObj, newPose, oldPose, score):
         diff = score(newPose) - score(oldPose)
         r = random()
-        mc = exp(diff/-14)
+        tmp = eaObj.evalnum*14/eaObj.evalbudget
+        mc = exp(diff/(-14-tmp))
         if diff < 0 or r<mc:
             oldPose.assign(newPose)
             return True
