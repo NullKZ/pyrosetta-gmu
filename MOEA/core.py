@@ -8,7 +8,7 @@ import variation
 import improvement
 import selection
 init()
-
+s4 = create_score_function("score4_smooth")
 class pareto_archive:
     #keeps track of all pareto ranks and counts for population
     def __init__(self, eaObj):
@@ -44,14 +44,20 @@ class pareto_archive:
         #finds Pareto ranks for each pose in population
         for base, target in itertools.permutations(poses, 2):
             if self.pareto_domination(base, target):
-                self.ranks[base]+=1
+                if base in self.ranks:
+                    self.ranks[base]+=1
+                else:
+                    self.ranks[base]=1
         #for pose in poses:
         #    self.ranks[pose] = self.pareto_rank(poses, pose)
     def update_counts(self, poses):
         #finds Pareto counts for each pose in population
         for base, target in itertools.permutations(poses, 2):
             if self.pareto_domination(target, base):
-                self.ranks[base]+=1
+                if base in self.counts:
+                    self.counts[base]+=1
+                else:
+                    self.counts[base]=1
         #for pose in poses:
         #    self.counts[pose] = self.pareto_count(poses, pose)
 
@@ -59,16 +65,13 @@ class ea:
     def __init__(self, cfg):
         setup.run(self, cfg)
         self.PA = pareto_archive(self)
+        self.rmsdarchive = []
     def run(self):
         self.evalnum=0
-        stagecfg = self.cfg['stages']
-        for j in range(1,5):
-            if str(j) in stagecfg['skip']:
-                continue
-            self.score = create_score_function(stagecfg['s'+str(j)+'scorefxn'])
-            while (self.evalnum / self.evalbudget) < float(stagecfg['s'+str(j)+'weight']):
-                self.iterate()
-            self.evalnum = 0
+        while (self.evalnum < self.evalbudget):
+            print(self.evalnum)
+            self.iterate()
+        self.evalnum = 0
     def iterate(self):
         poses = selection.select(self)
         tposes = []
@@ -78,4 +81,6 @@ class ea:
             variation.perturb(self, tempPose)
             improvement.run(self, tempPose)
             tposes.append(tempPose)
+        for pose in tposes:
+            self.rmsdarchive.append(core.scoring.CA_rmsd(pose,self.knownNative))
         self.population = selection.truncate(self, poses, tposes)

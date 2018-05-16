@@ -29,8 +29,8 @@ def population(eaObj, initcfg):
     for pose in eaObj.population:
         pose.assign(randomizeConformation(eaObj, pose))
 
-def mc(eaObj, newPose, oldPose):
-        diff = eaObj.score1(newPose) - eaObj.score1(oldPose)
+def mc(eaObj, newPose, oldPose, score):
+        diff = score(newPose) - score(oldPose)
         r = random()
         mc = exp(diff/-14)
         if diff < 0 or r<mc:
@@ -45,14 +45,13 @@ def randomizeConformation(eaObj, ipose):
         tempPose = Pose()
         tempPose.assign(base)
         eaObj.setupMover.apply(tempPose)
-        if eaObj.score0(tempPose) < eaObj.score0(base):
-            base.assign(tempPose)
+        mc(eaObj, tempPose, base, eaObj.score0)
     discardnum = 0
     while discardnum < eaObj.seqlen:
         tempPose = Pose()
         tempPose.assign(base)
         eaObj.setupMover.apply(tempPose)
-        if mc(eaObj, tempPose, base):
+        if mc(eaObj, tempPose, base, eaObj.score1):
             continue
         else:
             discardnum+=1
